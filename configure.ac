@@ -54,6 +54,13 @@ AM_COND_IF([WX],
   AM_CONDITIONAL([WX], [test 1 = 0])
 ])
 
+dnl Check for WebAssembly target
+AS_CASE([$host],
+  [wasm32-*-wasi], [
+    AM_CONDITIONAL([WASIX], [test 1 = 1])
+    AC_DEFINE([WASIX],[1],[Compile with WASIX])
+  ])
+
 
 AC_MSG_CHECKING([enable_x11])
 AC_ARG_ENABLE([x11],
@@ -100,6 +107,9 @@ dnl Checks for header files.
 AC_CHECK_HEADERS([unistd.h string.h])
 AM_COND_IF([WX],,
  [AC_CHECK_HEADERS([sgtty.h termio.h termcap.h termlib.h curses.h])])
+
+AM_COND_IF([WASIX],
+ [AC_CHECK_HEADERS([termios.h])])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T

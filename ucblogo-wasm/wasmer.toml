@@ -1,0 +1,22 @@
+[package]
+name = 'ucblogo'
+version = '6.2.4'
+description = 'Berkeley Logo interpreter (UCBLogo) compiled in WebAssembly.'
+
+# See more keys and definitions at https://docs.wasmer.io/registry/manifest
+
+[[module]]
+name = 'ucblogo'
+source = 'ucblogo.wasm'
+abi = 'wasi'
+
+[module.interfaces]
+wasi = '6.2.4-stable'
+
+[[command]]
+name = 'ucblogo'
+module = 'ucblogo'
+runner = 'wasi'
+
+[fs]
+"/usr" = "./usr"

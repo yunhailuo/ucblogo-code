@@ -26,3 +26,6 @@
 /ucblogo
 Makefile
 Makefile.in
+
+/ucblogo-wasm/*
+!/ucblogo-wasm/wasmer.toml

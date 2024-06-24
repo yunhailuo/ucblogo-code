@@ -16,6 +16,11 @@ ucblogo_CPPFLAGS = $(AM_CPPFLAGS)	\
  -DCSLSLOC='"$(cslsdir)"'		\
  -DTEMPLOC='"$(tempdir)"'
 
+if WASIX
+ucblogo_CFLAGS = -O2 -matomics -mbulk-memory -mmutable-globals -pthread -mthread-model posix -ftls-model=local-exec -fno-trapping-math -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS -fno-exceptions
+ucblogo_LDFLAGS = -lwasi-emulated-mman -lwasi-emulated-process-clocks -lwasi-emulated-getpid -fno-exceptions -Wl,--shared-memory -Wl,--max-memory=4294967296 -Wl,--import-memory -Wl,--export-dynamic -Wl,--export=__heap_base -Wl,--export=__stack_pointer -Wl,--export=__data_end -Wl,--export=__wasm_init_tls -Wl,--export=__wasm_signal -Wl,--export=__tls_size -Wl,--export=__tls_align -Wl,--export=__tls_base
+endif
+
 ucblogo_SOURCES = coms.c error.c eval.c files.c graphics.c init.c	\
  intern.c libloc.c lists.c logodata.c main.c math.c mem.c paren.c	\
  parse.c print.c wrksp.c
@@ -49,8 +54,12 @@ ucblogo_SOURCES += wxMain.cpp wxTerminal.cpp wxCommandHistory.cpp wxTurtleGraphi
 ucblogo_SOURCES += TextEditor.cpp
 ucblogo_SOURCES += wxterm.c
 else
+if WASIX
+ucblogo_SOURCES += wasmxtermjs.c
+else
 # do not need C++ linker, no good way to avoid it though
 ucblogo_SOURCES += term.c
+endif
 if X11
 ucblogo_SOURCES += xgraphics.c
 else
@@ -113,6 +122,10 @@ EXTRA_DIST += mac-fontmod/include/wx/mac/carbon/fontdlg.h	\
 # Make sure pdf built for distributions
 EXTRA_DIST += docs/ucblogo.pdf
 
+# wasm build
+makehelp: CFLAGS = -Wall -Wno-write-strings -Wno-unused-variable
+makehelp: LDFLAGS =
+
 docs/ucblogo.pdf: docs/ucblogo.texi
 	cd docs && $(MAKE) ucblogo.pdf
 
@@ -157,3 +170,12 @@ ucblogo.dmg : mac docs/ucblogo.pdf
 	cp docs/ucblogo.pdf /Volumes/UCBLogo/UCBLogoUserManual.pdf
 	hdiutil detach /Volumes/UCBLogo/
 	hdiutil convert ucblogo_base.dmg -format UDZO -o ucblogo.dmg
+
+wasm: ucblogo
+	mkdir -p ucblogo-wasm
+	wasm-opt --asyncify -O2 ucblogo -o ucblogo-wasm/ucblogo.wasm
+	mkdir -p ucblogo-wasm/usr/local/share/ucblogo/csls
+	cp csls/[a-z]* ucblogo-wasm/usr/local/share/ucblogo/csls
+	cp -r helpfiles ucblogo-wasm/usr/local/share/ucblogo/
+	cp -r logolib ucblogo-wasm/usr/local/share/ucblogo/
+	wapm2pirita pack --target v3 ucblogo-wasm ucblogo.webc
