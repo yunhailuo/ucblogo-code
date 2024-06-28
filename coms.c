@@ -57,6 +57,10 @@ extern int check_wx_stop(int force_yield, int pause_return_value);
 #else
 #ifdef HAVE_SGTTY_H
 #include <sgtty.h>
+#else
+#if defined (WASIX) && defined (HAVE_TERMIOS_H)
+#include <termios.h>
+#endif
 #endif
 #endif
 

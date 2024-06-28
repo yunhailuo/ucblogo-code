@@ -118,6 +118,10 @@ void debprintline(int line, char *name) {
 #else
 #ifdef HAVE_SGTTY_H
 #include <sgtty.h>
+#else
+#if defined (WASIX) && defined (HAVE_TERMIOS_H)
+#include <termios.h>
+#endif
 #endif
 #endif
 

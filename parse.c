@@ -47,6 +47,10 @@
 #else
 #ifdef HAVE_SGTTY_H
 #include <sgtty.h>
+#else
+#if defined (WASIX) && defined (HAVE_TERMIOS_H)
+#include <termios.h>
+#endif
 #endif
 #endif
 
@@ -97,6 +101,9 @@ int rd_getc(FILE *strm) {
     if (strm == stdin) zflush();
     c = ztc_getc(strm);
 #else
+#ifdef WASIX
+    if (strm == stdin) fflush(stdout);
+#endif
     c = getc(strm);
 #endif
     if (strm == stdin && c != EOF) update_coords(c);
