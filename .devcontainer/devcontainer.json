@@ -1,0 +1,8 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "mounts": [
+        "source=${localEnv:HOME}/Downloads/sysroot/wasix-sysroot,target=/wasi-sysroot,type=bind,consistency=cached"
+    ]
+}
