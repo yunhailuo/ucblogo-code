@@ -61,6 +61,10 @@
 #endif
 #endif
 
+#ifdef WASIX
+#include "webgraphics.h"
+#endif
+
 #undef TRUE
 #undef FALSE
 
@@ -135,6 +139,9 @@ void term_init(void) {
     strcpy(cl_arr, "\x1B[2J");
     so_arr[0] = '\1'; so_arr[1] = '\0';
     se_arr[0] = '\2'; se_arr[1] = '\0';
+
+    /* initialize graphics for web run */
+    webgraphics_init();
 }
 
 void charmode_on() {

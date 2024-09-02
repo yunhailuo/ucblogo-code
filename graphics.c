@@ -45,6 +45,8 @@
 #include "xgraphics.h"
 #elif defined(ibm)
 #include "ibmterm.h"
+#elif defined(WASIX)
+#include "webgraphics.h"
 #else
 #include "nographics.h"
 #endif /* end this whole big huge tree */
@@ -165,6 +167,11 @@ void draw_turtle(void) {
     //
     // So, drawing the turtle is handled manually at the wx level.
     return;
+#endif
+
+#ifdef WASIX
+	fprintf(stderr, "drawTurtle, %f, %f, %f\n", screen_x_coord, screen_y_coord, turtle_heading);
+	return;
 #endif
 
     if (!turtle_shown) {

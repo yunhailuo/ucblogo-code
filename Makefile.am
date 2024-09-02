@@ -63,7 +63,11 @@ endif
 if X11
 ucblogo_SOURCES += xgraphics.c
 else
+if WASIX
+ucblogo_SOURCES += webgraphics.c
+else
 ucblogo_SOURCES += nographics.c
+endif
 endif
 endif
 
@@ -83,7 +87,7 @@ dist_pixmaps_DATA = ucblogo.xpm
 
 # #include files used in build
 EXTRA_DIST = eval.h globals.h gpl_text.h LogoFrame.h logo.h		\
- nographics.h obj.h TextEditor.h wxGlobals.h wxGraphics.h wxMain.h	\
+ nographics.h obj.h TextEditor.h webgraphics.h wxGlobals.h wxGraphics.h wxMain.h	\
  wxTerminal.h wxCommandHistory.h wxTurtleGraphics.h xgraphics.h
 
 # Source for utility program for regenerating ./helpfiles/ from ./usermanual
