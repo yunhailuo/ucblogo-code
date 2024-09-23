@@ -1,5 +1,7 @@
 # UCBLogo
 
+In this fork, I added wasm (wasmer webc to be exact) as new building target and wasmer-js/xtermjs as new terminal for my own project. Exact building details can be found in the new target, `wasm`, added to the `Makefile.am`. Briefly, a wasm binary is first built with the specialized wasmer-js/xtermjs terminal. Then a Binaryen optimizer with asyncify gets applied to the newly make wasm binary. After that, three sets of resources, `csls`, `helpfiles` and `logolib`, are copied and packaged together with optimized wasm into a v3 webc container. The whole building process can be done in the dev container which has a version at `ghcr.io/yunhailuo/ucblogo-code:wasi-webc-dev`.
+
 ## Berkeley Logo interpreter
 
 This is a free (both senses) interpreter for the Logo programming language.
